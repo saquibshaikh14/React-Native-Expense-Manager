@@ -5,11 +5,11 @@ import TopHeader from "../components/TopHeader";
 import TotalExpenseView from "../components/TotalExpenseView";
 import StyleConstants from "../commons/StylesConstants";
 import ExpenseChart from "../components/ExpenseChart";
-import Button from "../components/Button";
+import TouchableOpacityWrapper from "../components/TouchableOpacityWrapper";
 import MiniExpenseList from "../components/MiniExpenseList";
 // import WrapperComponent from "../components/WrapperComponent";
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }: any) {
     return (
         <View style={styles.container}>
             {/* <HeaderContainer> */}
@@ -31,8 +31,8 @@ export default function HomeScreen() {
             <ExpenseChart data={{/** pass required data here, currently leaving empty */ }} />
             {/* <Button buttonText="Test Button"/> */}
             <View style={styles.actionWrapper}>
-                <Button buttonText="Expenses" buttonStyle={styles.actionButton} textStyle={styles.actionButtonText} />
-                <Button buttonText="Add Expenses" buttonStyle={styles.actionButton} textStyle={styles.actionButtonText} />
+                <TouchableOpacityWrapper buttonText="Expenses" buttonStyle={styles.actionButton} textStyle={styles.actionButtonText} />
+                <TouchableOpacityWrapper buttonText="Add Expense" buttonStyle={styles.actionButton} textStyle={styles.actionButtonText} onPress={() => { console.log("clicked"); navigation.navigate("AddExpense") }} />
             </View>
             <MiniExpenseList />
         </View>

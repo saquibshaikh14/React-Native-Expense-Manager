@@ -32,6 +32,9 @@ import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics';
 import BlurView from './src/components/BlurView';
 import { WithSplashScreen } from './src/screens/splashScreen';
 import HomeScreen from './src/screens/HomeScreen';
+import AddExpenseScreen from './src/screens/AddExpenseScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // import {Provider} from 'react-redux';
 // import store from './src/redux/store';
@@ -46,6 +49,9 @@ function App(): JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter
   };
+
+
+  const Stack = createNativeStackNavigator();
 
 
   //load biometry type
@@ -114,12 +120,19 @@ function App(): JSX.Element {
       {/* add overlay to blur if the isLock is true. */}
       <SafeAreaView style={{ ...backgroundStyle, flex: 1 }}>
         {/* <ScrollView> */}
-          <StatusBar
-            barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-            backgroundColor={backgroundStyle.backgroundColor}
-          />
-          {/* <BlurView isLocked={isLocked} /> */}
-          <HomeScreen />
+        <StatusBar
+          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+          backgroundColor={backgroundStyle.backgroundColor}
+        />
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="AddExpense" component={AddExpenseScreen} options={{ headerShown: false }} />
+          </Stack.Navigator>
+        </NavigationContainer>
+        {/* <BlurView isLocked={isLocked} /> */}
+        {/* <HomeScreen /> */}
+        {/* <AddExpenseScreen /> */}
 
         {/* </ScrollView> */}
       </SafeAreaView>
