@@ -20,10 +20,7 @@ const dataSet = [
     { id: '5', title: 'Beta2' },
     { id: '6', title: 'Gamma2' },
 ]
-// interface Item {
-//     id: string;
-//     title: string;
-// }
+
 
 //TODO: Need add validation for inputs
 //TODO: better handling of events
@@ -40,9 +37,7 @@ type AddExpenseScreenProps = {
 
 export default function AddExpenseScreen({ navigation }: AddExpenseScreenProps) {
 
-    // const [date, setDate] = useState(new Date())
     const [open, setOpen] = useState(false);
-    // const [selectedItem, setSelectedItem] = useState<any>({ id: '2', title: 'Beta' });
     const [expense, setExpense] = useState<Expense>({
         date: new Date(),
         name: "",
@@ -82,10 +77,6 @@ export default function AddExpenseScreen({ navigation }: AddExpenseScreenProps) 
                 </View>
             </View>
             <ScrollView>
-                {/* <KeyboardAvoidingView
-                    style={{ flex: 1 }}
-                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                    enabled> */}
                 <View style={styles.formContainer}>
                     <FormInput labelText="Expense Name"
                         autoCapitalize="words"
@@ -98,24 +89,6 @@ export default function AddExpenseScreen({ navigation }: AddExpenseScreenProps) 
                             const value = event.nativeEvent.text;
                             updateExpense({ key: "category", value });
                         }} />
-                    {/* <SearchableInput dataSet={dataSet} /> */}
-                    {/* <AutocompleteDropdown
-                            clearOnFocus={false}
-                            closeOnBlur={true}
-                            showClear={false}
-                            showChevron={false}
-                            initialValue={selectedItem} // or just '2'
-                            onSelectItem={setSelectedItem}
-                            dataSet={dataSet}
-                        /> */}
-                    {/* <AutocompleteDropdown
-                        clearOnFocus={false}
-                        closeOnBlur={true}
-                        closeOnSubmit={false}
-                        initialValue={selectedItem} // or just '2'
-                        onSelectItem={setSelectedItem}
-                        dataSet={dataSet}
-                    /> */}
                     <FormInput keyboardType="decimal-pad"
                         labelText="Amount"
                         onEndEditing={(event: NativeSyntheticEvent<TextInputEndEditingEventData>) => {
@@ -123,11 +96,9 @@ export default function AddExpenseScreen({ navigation }: AddExpenseScreenProps) 
                             updateExpense({ key: "amount", value });
                         }}
                     />
-                    {/* <TouchableWithoutFeedback onPressIn={() => setOpen(true)}> */}
-                    {/* <View> */}
+
                     <FormInput labelText="Date" showSoftInputOnFocus={false} caretHidden={true} value={expense.date?.toLocaleDateString()} onTouchEnd={() => { setOpen(true); Keyboard.dismiss(); }} />
-                    {/* </View> */}
-                    {/* </TouchableWithoutFeedback> */}
+
                     <DatePicker
                         modal
                         androidVariant="iosClone"
@@ -146,7 +117,7 @@ export default function AddExpenseScreen({ navigation }: AddExpenseScreenProps) 
                     />
                     <TouchableOpacityWrapper buttonText="Save" buttonStyle={styles.saveButton} textStyle={styles.saveButtonText} onPress={handleSave} />
                 </View>
-                {/* </KeyboardAvoidingView> */}
+
             </ScrollView>
         </View>
     )
