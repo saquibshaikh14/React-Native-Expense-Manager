@@ -9,15 +9,16 @@ type FormInputProps = {
     // inputType?: KeyboardTypeOptions,
     // placeHolder?: string;
     // onChange?: (text: string) => void;
+    isValid?: Boolean;
     ref?: RefObject<TextInput> | null;
 }
 
-export default function FormInput({ labelText, ref, ...remainingProps }: TextInputWrapperProps) {
+export default function FormInput({ labelText, isValid = true, ref, ...remainingProps }: TextInputWrapperProps) {
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container]}>
             {labelText && <Text style={styles.labelText}>{labelText}</Text>}
-            <TextInput style={styles.input} {...remainingProps} />
+            <TextInput style={[styles.input, isValid ? {} : { borderColor: "red" }]} autoComplete={"off"} enterKeyHint="next" {...remainingProps} />
         </View>
     )
 }
@@ -35,17 +36,26 @@ const styles = StyleSheet.create({
         marginTop: 5,
         borderRadius: 3,
         fontFamily: StylesConstants.fontFamily,
-        color: "#a9a9a9",
+        color: "#5e5e5e",
         borderWidth: 1,
         borderColor: "#e8e8e8",
-        backgroundColor: "#f3f3f3",
+        backgroundColor: "#fcfcfc",
         fontSize: 14,
-        elevation: 15,
+        elevation: 20,
+        paddingLeft: 10,
+        paddingRight: 10,
         //ios except ele
         shadowColor: '#ccc',
         // shadowOffset: { width: -2, height: 4 },
         // shadowOpacity: 0.2,
         // shadowRadius: 3,
         // for android, ele n shdowcol
-    }
+    },
+    inputContainerStyle: {
+        display: 'flex',
+        flexDirection: 'row',
+        backgroundColor: '#e5ecf2',
+        borderRadius: 5
+    },
+
 })

@@ -6,6 +6,8 @@
  * @format
  */
 
+import 'react-native-gesture-handler';
+
 import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
@@ -34,8 +36,9 @@ import { WithSplashScreen } from './src/screens/splashScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import AddExpenseScreen from './src/screens/AddExpenseScreen';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import { StackNavigationOptions, createStackNavigator } from '@react-navigation/stack';
+import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown'
+// import DBWrapper from './src/DBWrapper';
 // import {Provider} from 'react-redux';
 // import store from './src/redux/store';
 
@@ -50,8 +53,13 @@ function App(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter
   };
 
+  const screenOption: StackNavigationOptions = {
+    headerShown: false,
+    presentation: "modal"
+  }
 
-  const Stack = createNativeStackNavigator();
+
+  const Stack = createStackNavigator();
 
 
   //load biometry type
@@ -116,30 +124,34 @@ function App(): JSX.Element {
   return (
 
     <WithSplashScreen isAppReady={isAppReady && !isLocked}>
-      {/* <Provider store={store}> */}
-      {/* add overlay to blur if the isLock is true. */}
-      <SafeAreaView style={{ ...backgroundStyle, flex: 1 }}>
-        {/* <ScrollView> */}
-        <StatusBar
-          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-          backgroundColor={backgroundStyle.backgroundColor}
-        />
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="AddExpense" component={AddExpenseScreen} options={{ headerShown: false }} />
-          </Stack.Navigator>
-        </NavigationContainer>
-        {/* <BlurView isLocked={isLocked} /> */}
-        {/* <HomeScreen /> */}
-        {/* <AddExpenseScreen /> */}
+      {/* <AutocompleteDropdownContextProvider> */}
+        {/* <Provider store={store}> */}
+        {/* add overlay to blur if the isLock is true. */}
+        <SafeAreaView style={{ ...backgroundStyle, flex: 1 }}>
+          {/* <ScrollView> */}
+          <StatusBar
+            barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+            backgroundColor={backgroundStyle.backgroundColor}
+          />
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen name="Home" component={HomeScreen} options={screenOption} />
+              <Stack.Screen name="AddExpense" component={AddExpenseScreen} options={screenOption} />
+            </Stack.Navigator>
+          </NavigationContainer>
 
-        {/* </ScrollView> */}
-      </SafeAreaView>
-      {/* </Provider> */}
+          {/* <BlurView isLocked={isLocked} /> */}
+          {/* <HomeScreen /> */}
+          {/* <AddExpenseScreen /> */}
+
+          {/* </ScrollView> */}
+        </SafeAreaView>
+        {/* </Provider> */}
+      {/* </AutocompleteDropdownContextProvider> */}
     </WithSplashScreen>
   );
 }
+
 
 const styles = StyleSheet.create({
 });

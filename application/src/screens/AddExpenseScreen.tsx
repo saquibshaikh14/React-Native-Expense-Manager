@@ -1,16 +1,71 @@
-import React, { useState } from "react";
-import { Button, Image, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Image, Keyboard, NativeSyntheticEvent, ScrollView, StyleSheet, Text, TextInputEndEditingEventData, View } from "react-native";
 import TopHeader from "../components/TopHeader";
 import StylesConstants from "../commons/StylesConstants";
 import FormInput from "../components/FormInput";
 import DatePicker from "react-native-date-picker";
 import TouchableOpacityWrapper from "../components/TouchableOpacityWrapper";
+// import SearchableInput from "../components/SearchableInput";
+import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
+import DBWrapper from "../DBWrapper";
+import { asyncWrapper } from "../commons/Common";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { ParamListBase } from "@react-navigation/native";
 
+const dataSet = [
+    { id: '1', title: 'Alpha' },
+    { id: '2', title: 'Beta' },
+    { id: '3', title: 'Alpha1' },
+    { id: '4', title: 'Alpha2' },
+    { id: '5', title: 'Beta2' },
+    { id: '6', title: 'Gamma2' },
+]
+// interface Item {
+//     id: string;
+//     title: string;
+// }
 
-export default function AddExpenseScreen() {
+//TODO: Need add validation for inputs
+//TODO: better handling of events
+type Expense = {
+    date: Date;
+    name: string;
+    category: string;
+    amount: string;
+}
 
-    const [date, setDate] = useState(new Date())
-    const [open, setOpen] = useState(false)
+type AddExpenseScreenProps = {
+    navigation: StackNavigationProp<ParamListBase>
+}
+
+export default function AddExpenseScreen({ navigation }: AddExpenseScreenProps) {
+
+    // const [date, setDate] = useState(new Date())
+    const [open, setOpen] = useState(false);
+    // const [selectedItem, setSelectedItem] = useState<any>({ id: '2', title: 'Beta' });
+    const [expense, setExpense] = useState<Expense>({
+        date: new Date(),
+        name: "",
+        category: "",
+        amount: ""
+    });
+
+    const handleSave = asyncWrapper(async () => {
+        console.log(await DBWrapper.insert(expense));
+        navigation.goBack();
+    });
+    const updateExpense = ({ key, value }: { key: keyof Expense; value: Date | string }) => {
+        setExpense((prevState: Expense) => {
+            if (key === 'date' && typeof value === 'string') {
+                value = new Date(value);
+            }
+            return { ...prevState, [key]: value };
+        });
+    }
+
+    useEffect(() => {
+        console.log("ex", expense)
+    }, [expense])
 
     return (
         <View style={styles.container}>
@@ -27,34 +82,71 @@ export default function AddExpenseScreen() {
                 </View>
             </View>
             <ScrollView>
+                {/* <KeyboardAvoidingView
+                    style={{ flex: 1 }}
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    enabled> */}
                 <View style={styles.formContainer}>
-                    <FormInput labelText="Expense Name" />
-                    <FormInput labelText="Category" />
-                    <FormInput keyboardType="decimal-pad" labelText="Amount" />
-                    <TouchableWithoutFeedback onPressIn={() => setOpen(true)}>
-                        <View>
-                            <FormInput labelText="Date" editable={false} value={date.toLocaleDateString()} />
-                        </View>
-                    </TouchableWithoutFeedback>
+                    <FormInput labelText="Expense Name"
+                        autoCapitalize="words"
+                        onEndEditing={(event: NativeSyntheticEvent<TextInputEndEditingEventData>) => {
+                            const value = event.nativeEvent.text;
+                            updateExpense({ key: "name", value });
+                        }} />
+                    <FormInput labelText="Category"
+                        onEndEditing={(event: NativeSyntheticEvent<TextInputEndEditingEventData>) => {
+                            const value = event.nativeEvent.text;
+                            updateExpense({ key: "category", value });
+                        }} />
+                    {/* <SearchableInput dataSet={dataSet} /> */}
+                    {/* <AutocompleteDropdown
+                            clearOnFocus={false}
+                            closeOnBlur={true}
+                            showClear={false}
+                            showChevron={false}
+                            initialValue={selectedItem} // or just '2'
+                            onSelectItem={setSelectedItem}
+                            dataSet={dataSet}
+                        /> */}
+                    {/* <AutocompleteDropdown
+                        clearOnFocus={false}
+                        closeOnBlur={true}
+                        closeOnSubmit={false}
+                        initialValue={selectedItem} // or just '2'
+                        onSelectItem={setSelectedItem}
+                        dataSet={dataSet}
+                    /> */}
+                    <FormInput keyboardType="decimal-pad"
+                        labelText="Amount"
+                        onEndEditing={(event: NativeSyntheticEvent<TextInputEndEditingEventData>) => {
+                            const value = event.nativeEvent.text;
+                            updateExpense({ key: "amount", value });
+                        }}
+                    />
+                    {/* <TouchableWithoutFeedback onPressIn={() => setOpen(true)}> */}
+                    {/* <View> */}
+                    <FormInput labelText="Date" showSoftInputOnFocus={false} caretHidden={true} value={expense.date?.toLocaleDateString()} onTouchEnd={() => { setOpen(true); Keyboard.dismiss(); }} />
+                    {/* </View> */}
+                    {/* </TouchableWithoutFeedback> */}
                     <DatePicker
                         modal
                         androidVariant="iosClone"
                         maximumDate={new Date()}
                         mode="date"
                         open={open}
-                        date={date}
+                        date={expense.date}
                         onConfirm={(date) => {
-                            setOpen(false)
-                            setDate(date);
-                            console.log("confirmed")
+                            setOpen(false);
+                            console.log(typeof date)
+                            updateExpense({ key: "date", value: date })
                         }}
                         onCancel={() => {
                             setOpen(false);
-                            console.log("cancelled")
                         }}
                     />
-                    <TouchableOpacityWrapper buttonText="Save" buttonStyle={styles.saveButton} textStyle={styles.saveButtonText} />
+                    <TouchableOpacityWrapper buttonText="Save" buttonStyle={styles.saveButton} textStyle={styles.saveButtonText} onPress={handleSave} />
                 </View>
+                {/* </KeyboardAvoidingView> */}
             </ScrollView>
         </View>
     )

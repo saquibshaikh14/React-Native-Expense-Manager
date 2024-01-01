@@ -7,9 +7,15 @@ import StyleConstants from "../commons/StylesConstants";
 import ExpenseChart from "../components/ExpenseChart";
 import TouchableOpacityWrapper from "../components/TouchableOpacityWrapper";
 import MiniExpenseList from "../components/MiniExpenseList";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { ParamListBase } from "@react-navigation/native";
 // import WrapperComponent from "../components/WrapperComponent";
 
-export default function HomeScreen({ navigation }: any) {
+type HomeScreenProps = {
+    navigation: StackNavigationProp<ParamListBase>
+}
+
+export default function HomeScreen({ navigation }: HomeScreenProps) {
     return (
         <View style={styles.container}>
             {/* <HeaderContainer> */}
@@ -31,8 +37,17 @@ export default function HomeScreen({ navigation }: any) {
             <ExpenseChart data={{/** pass required data here, currently leaving empty */ }} />
             {/* <Button buttonText="Test Button"/> */}
             <View style={styles.actionWrapper}>
-                <TouchableOpacityWrapper buttonText="Expenses" buttonStyle={styles.actionButton} textStyle={styles.actionButtonText} />
-                <TouchableOpacityWrapper buttonText="Add Expense" buttonStyle={styles.actionButton} textStyle={styles.actionButtonText} onPress={() => { console.log("clicked"); navigation.navigate("AddExpense") }} />
+                <TouchableOpacityWrapper buttonText="Expenses"
+                    buttonStyle={styles.actionButton}
+                    textStyle={styles.actionButtonText} />
+                <TouchableOpacityWrapper buttonText="Add Expense"
+                    buttonStyle={styles.actionButton}
+                    textStyle={styles.actionButtonText}
+                    onPress={() => {
+                        console.log("add expense button clicked");
+                        navigation.navigate("AddExpense")
+                    }}
+                />
             </View>
             <MiniExpenseList />
         </View>
